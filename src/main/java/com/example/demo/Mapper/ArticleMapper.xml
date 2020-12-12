@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.Mapper.ArticleMapper">
+	<select id="getArticles" resultType="com.example.demo.dao.Article">
+		select * from article;
+	</select>
+	
+	<insert id="insertArticle" parameterType="Map">
+	
+		insert into article set userid= #{id}, callno=#{call}, title=#{title}, body=#{body}, writer=#{writer}, date=now(), hit=0, ptno=2; 	
+	</insert>
+	
+	
+	<select id="getArticle" resultType="com.example.demo.dao.Article" parameterType="int">
+		select * from article where id = #{aid};
+	</select>
+	
+	<update id="addHit" parameterType="com.example.demo.dao.Article">
+		update article set hit = #{hit} where id = #{aid} 
+	</update>
+	
+	
+</mapper>

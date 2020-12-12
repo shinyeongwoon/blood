@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.Mapper.CardMapper">
+
+	<!-- cardno=1&userid=shin&cbg=O&location=chungju&bdate=202011014 -->
+	<insert id="insertCard" parameterType="Map">
+		insert into card set
+		userid = #{userid} , cardno = #{cardno},
+		cbg=#{cbg},location=#{location}, bdate=#{bdate}, cdate=now(), sex =
+		#{sex}, kind=#{kind}, bname=#{bname} , bbirth=#{bbirth}, source = 0,
+		nuserid=#{userid};
+	</insert>
+
+	<select id="getCards" resultType="com.example.demo.cardDao.Card"
+		parameterType="String">
+		select * from card where userid = #{userId};
+	</select>
+	<!-- 변경 필요 -->
+	<select id="getCardCnt" resultType="int" parameterType="String">
+		select
+		count(*) from card where nuserid = #{userId} and source != 1;
+	</select>
+
+	<select id="getCard" resultType="com.example.demo.cardDao.Card"
+		parameterType="int">
+		select * from card where id = #{cardid};
+	</select>
+
+	<update id="giveCard">
+		update card set userid=#{receiver},source = 1 where
+		id
+		=#{cardid} and userid =#{giver};
+	</update>
+
+
+	<select id="getAllCardCnt" resultType="int">
+		select count(*) from card;
+	</select>
+
+
+	<select id="getPossivleCnt" resultType="int">
+		select distinct count(*)
+		from card c
+		inner join users u
+		on c.userid= u.userid and loan =1 and
+		c.source != 2;
+	</select>
+
+	<select id="getLoanCnt" resultType="int">
+		select sum(loancnt) from
+		users;
+	</select>
+
+	<select id="getUserLoanCnt" resultType="int"
+		parameterType="String">
+		select loancnt from users where Userid = #{userid};
+	</select>
+
+	<update id="loanCardSend">
+		update card set userid = #{userid}, source = 2 where
+		id in(
+		select * from (select c.id from users u inner join card c on
+		u.userid =
+		c.userid and loan = 1 order by rand() limit #{loancnt}) as t
+		);
+	</update>
+
+	<select id="getLaonOutCnt" resultType="int">
+		select count(*) from card where nuserid = #{userId} and source = 2;
+	</select>
+
+	
+
+
+</mapper>

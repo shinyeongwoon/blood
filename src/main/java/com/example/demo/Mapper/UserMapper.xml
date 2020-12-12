@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.Mapper.UserMapper">
+	<select id="getUsers"
+		resultType="com.example.demo.userDao.Users">
+		select * from users;
+	</select>
+
+
+	<insert id="insertUser" parameterType="Map">
+		insert into users set name
+		= #{name} , Userid = #{Userid} , password = #{password} , userno =
+		#{userno}, bloodgroup = #{bloodgroup}, donationcnt=0 , loan = #{loan}, loancnt =0 , loanbackcnt=0;
+	</insert>
+
+	<select id="login" resultType="com.example.demo.userDao.Users">
+		select * from users where Userid =
+		#{id} and password = #{pw};
+	</select>
+
+	<select id="getUser" resultType="com.example.demo.userDao.Users">
+		select * from users where Userid
+		= #{receiver};
+	</select>
+
+	<select id="getDonationCnt" resultType="int"
+		parameterType="com.example.demo.userDao.Users">
+		select donationcnt from users where Userid = #{Userid};
+	</select>
+
+	<update id="addDoCnt">
+		update users set donationcnt = #{addDoCnt}
+		where
+		Userid=#{userid}
+	</update>
+
+
+	<select id="getBestGiver"
+		resultType="com.example.demo.userDao.Users">
+		select * from users order by donationcnt desc limit 5;
+	</select>
+
+	<select id="getAllcardcnt"
+		resultType="com.example.demo.userDao.Users">
+		select u.userid,c.userid, u.name, count(c.userid) count
+		from
+		users u
+		left join card c
+		on u.userid = c.userid
+		group by u.id
+		order by
+		count desc limit 5;
+	</select>
+
+	<update id="updateUserimpo"
+		parameterType="com.example.demo.userDao.Users">
+		update users set name = #{name} , Userid = #{Userid} , password = #{password} , userno = #{userno}, bloodgroup = #{bloodgroup}, loan = #{loan}, loanbackcnt=0 where Userid=#{userid};
+	</update>
+
+	<select id="getdonationlevel"
+		resultType="com.example.demo.userDao.Users">
+		select Userid,donationcnt from users order by loancnt desc; 
+	</select>
+	
+
+	<update id="updateloandata" parameterType="com.example.demo.userDao.Users">
+		update users set loancnt=#{loancnt} , loandate=#{year} where Userid=#{userid};
+	</update>
+	
+
+</mapper>
